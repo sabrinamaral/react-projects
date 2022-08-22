@@ -7,25 +7,39 @@ function App() {
   const [list, setList] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editID, setEditID] = useState(null);
-  const [alert, setAlert] = useState({ show: false, msg: "", type: "" });
+  const [alert, setAlert] = useState({
+    show: false,
+    msg: "",
+    type: "",
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name) {
-      // setAlert()
+      showAlert(true, "please enter some value", "danger");
     } else if (name && isEditing) {
       // setIsEditing()
     } else {
-      const newItem = { id: new Date().setDate().toString(), title: name };
-      // setAlert();
+      const newItem = {
+        id: new Date().getTime().toString(),
+        title: name,
+      };
+      setAlert({ show: true, msg: "new item added", type: "success" });
       setList([...list, newItem]);
       setName("");
     }
   };
+  const showAlert = (show = false, msg = "", type = "") => {
+    setAlert({ show, msg, type });
+  };
+  const removeItem = (id) => {
+    showAlert(true, "item removed", "danger");
+    setList(list.filter((item) => item.id !== id));
+  };
   return (
     <section className="section-center">
       <form className="grocery-form" onSubmit={handleSubmit}>
-        {alert.show && <Alert />}
+        {alert.show && <Alert {...alert} removeAlert={showAlert} list={list} />}
         <h3>grocery bud</h3>
         <div className="form-control">
           <input
@@ -42,8 +56,16 @@ function App() {
       </form>
       {list.length > 0 && (
         <div className="grocery-container">
-          <List items={list} />
-          <button className="clear-btn">clear items</button>
+          <List items={list} setItems={setList} removeItem={removeItem} />
+          <button
+            className="clear-btn"
+            onClick={() => {
+              setList([]);
+              showAlert(true, "all items removed", "danger");
+            }}
+          >
+            clear items
+          </button>
         </div>
       )}
     </section>
