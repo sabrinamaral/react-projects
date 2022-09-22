@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Error() {
+function Error({ error }) {
   return (
     <div className="page-error">
-      <h2>404</h2>
-      <h3>somenthing went wrong 🫤</h3>
+      <h2>somenthing went wrong 🫤</h2>
+      <p>Error: {error.msg}</p>
       <Link to="/" className="btn">
         go back
       </Link>
